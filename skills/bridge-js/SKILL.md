@@ -1,5 +1,5 @@
 ---
-name: bridgejs
+name: bridge-js
 description: Assist Swift developers using BridgeJS for Swift-to-JavaScript interoperability in WebAssembly projects
 ---
 
