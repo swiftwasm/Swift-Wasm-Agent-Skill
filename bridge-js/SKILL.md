@@ -1,36 +1,34 @@
 ---
 name: bridge-js
-description: Assist Swift developers using BridgeJS for Swift-to-JavaScript interoperability in WebAssembly projects
+description: Export Swift to JavaScript and import JavaScript/TypeScript into Swift using BridgeJS; type-safe bindings via @JS and related macros or bridge-js.d.ts; setup, config, AOT. Use when using or setting up BridgeJS, exporting Swift APIs to JS, importing JS/TS APIs into Swift, writing bridge-js.d.ts, configuring BridgeJS, or debugging BridgeJS boundaries.
 ---
 
-# Instructions
+# BridgeJS
 
-You are an expert in Swift and WebAssembly development using BridgeJS from JavaScriptKit. BridgeJS is a code generation tool that creates type-safe Swift-JavaScript bindings.
+BridgeJS is a code-generation layer in JavaScriptKit that makes Swift–JavaScript interop faster and easier than raw `JSObject`/`JSValue`: you declare the API shape in Swift (or TypeScript), and the tool generates glue code. Two directions: **export Swift to JavaScript** and **import JavaScript into Swift**.
 
-Your goal is to help users:
+## Referencing official docs
 
-1. Export Swift classes, functions, enums, and properties to JavaScript using `@JS` macros
-2. Import TypeScript/JavaScript APIs into Swift via `bridge-js.d.ts` definitions
-3. Design Swift APIs that work well with BridgeJS capabilities
-4. Set up testing infrastructure for BridgeJS projects
+When you need details, read DocC from the **checked-out JavaScriptKit repository**: `Sources/JavaScriptKit/Documentation.docc/` when inside the JavaScriptKit repo, or `.build/checkouts/JavaScriptKit/Sources/JavaScriptKit/Documentation.docc/` when in a project that depends on JavaScriptKit.
 
-## Key Concepts
+## Two directions
 
-- **Exporting Swift**: Use `@JS` macro to mark Swift declarations for export to JavaScript
-- **Importing TypeScript**: Define APIs in `bridge-js.d.ts` to generate type-safe Swift bindings
-- **`@JS(namespace:)`**: Organizes exports into JavaScript namespaces
-- **Type-safe bindings**: Generates TypeScript declarations (`.d.ts`) automatically
-- **Build plugin or AOT**: Choose between build-time or ahead-of-time code generation
+- **Export Swift**: Use `@JS` (and `@JS(namespace:enumStyle:)`) on functions, classes, structs, enums, closures, protocols, etc. JavaScript then calls into your Swift code. See [references/exporting.md](references/exporting.md).
+- **Import JavaScript**: (1) Declare bindings in Swift with `@JSFunction`, `@JSClass`, `@JSGetter`, `@JSSetter`; use `@JSGetter(from: .global)` for globals like `document`/`console`; inject other implementations via `getImports()`. See [references/importing.md](references/importing.md). (2) Or use `bridge-js.d.ts` to generate the same Swift bindings. See [references/importing-ts.md](references/importing-ts.md).
 
-## Important Limitations
+## Key concepts
 
-- BridgeJS is experimental - APIs may change
-- Only `throws(JSException)` is supported, not plain `throws`
-- Some Swift types are not supported, always check for given type support first
-- For each supported Swift type there might be some limitation, check for those first
+- **Type mapping**: Primitives, `Optional` ↔ `null`, `JSUndefinedOr` ↔ `undefined`, arrays, `Record<string, V>` ↔ `[String: V]`, unbridged → `JSObject`/`JSValue`. See [references/types.md](references/types.md) if present.
+- **Errors**: Only `throws(JSException)` is supported at the bridge; plain `throws` is not.
+- **Preview interfaces**: For **previewing d.ts → Swift** locally, run the ts2swift script from the checked-out JavaScriptKit: from a project that depends on JavaScriptKit use `node .build/checkouts/JavaScriptKit/Plugins/BridgeJS/Sources/TS2Swift/JavaScript/bin/ts2swift.js <input.d.ts> [options]`; Run with `--help` for usage.
+- **Closures**: Do not use plain Swift closure types for bridging Swift closures to JavaScript. Use **JSTypedClosure** when passing or returning Swift closures to JS, and call `release()` when the closure is no longer needed by JS. When receiving callbacks from JS (e.g. imported APIs), use regular closure types in Swift (`(Args) -> Return`).
 
-# References
+## References
 
-- [Swift API Reference](references/swift_api.md) - Complete API patterns for all supported types
-- [Project Setup](references/project_setup.md) - Swift toolchain and BridgeJS integration
-- [Testing Guide](references/testing.md) - End-to-end testing with Vitest
+- [Project setup and config](references/project_setup.md)
+- [Exporting Swift to JS](references/exporting.md)
+- [Importing JS into Swift (macros)](references/importing.md)
+- [Generating from TypeScript](references/importing-ts.md)
+- [Supported types](references/types.md) (optional)
+- [Testing](references/testing.md)
+- [Limitations](references/unsupported.md)
