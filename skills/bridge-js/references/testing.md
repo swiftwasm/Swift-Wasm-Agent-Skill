@@ -1,8 +1,24 @@
 # Testing BridgeJS Projects
 
-Guide to testing BridgeJS projects using Vitest.
+## Swift tests (XCTest / swift-testing)
 
-## Setup
+Run Swift tests compiled to WebAssembly in a JavaScript environment (Node.js or browser):
+
+```bash
+swift package --disable-sandbox --swift-sdk $SWIFT_SDK_ID js test
+```
+
+- The test target must depend on your library/app target and on `JavaScriptEventLoopTestSupport` (from JavaScriptKit).
+- The `--disable-sandbox` flag is required so the test runner can execute the JS runtime.
+- Output is produced under `.build/plugins/PackageToJS/outputs/<PackageTests>/` (e.g. `PackageTests.wasm`).
+
+Default is Node.js; use `--environment node` or see DocC for browser/Playwright. Full details: `Sources/JavaScriptKit/Documentation.docc/Articles/Testing.md` in the checked-out JavaScriptKit repo.
+
+## JS-side tests (e.g. Vitest)
+
+For end-to-end tests that call into your Swift exports from JavaScript, use the generated package (`instantiate`, `defaultNodeSetup`) and a test runner such as Vitest.
+
+### Setup
 
 ```bash
 mkdir -p tests && cd tests
