@@ -1,11 +1,14 @@
 {
+  "$schema": "https://cdn.anthropic.com/schemas/claude-plugin/marketplace.schema.json",
   "name": "swiftwasm-skills",
   "owner": {
     "name": "SwiftWasm"
   },
   "metadata": {
     "description": "Agent Skills for SwiftWasm ecosystem",
-    "version": "0.0.1"
+    "version": "0.0.1",
+    "repository": "https://github.com/swiftwasm/skills",
+    "license": "MIT"
   },
   "plugins": [
     {
@@ -13,8 +16,11 @@
       "description": "Assist Swift developers who consume JavaScriptKit, a Swift library for interacting with JavaScript APIs via WebAssembly",
       "source": "./",
       "strict": false,
+      "category": "development",
+      "keywords": ["swift", "webassembly", "javascriptkit", "wasm"],
+      "tags": ["swift", "wasm"],
       "skills": [
-        "./skills/javascriptkit"
+        "./javascriptkit"
       ]
     },
     {
@@ -22,8 +28,11 @@
       "description": "Assist Swift developers using BridgeJS for Swift-to-JavaScript interoperability in WebAssembly projects",
       "source": "./",
       "strict": false,
+      "category": "development",
+      "keywords": ["swift", "webassembly", "bridgejs", "wasm", "interop"],
+      "tags": ["swift", "wasm"],
       "skills": [
-        "./skills/bridge-js"
+        "./bridge-js"
       ]
     },
     {
@@ -31,8 +40,11 @@
       "description": "Check Swift on Wasm compatibility, identify incompatible frameworks, port and refactor code for WebAssembly",
       "source": "./",
       "strict": false,
+      "category": "development",
+      "keywords": ["swift", "webassembly", "porting", "wasm", "compatibility"],
+      "tags": ["swift", "wasm"],
       "skills": [
-        "./skills/porting"
+        "./porting"
       ]
     }
   ]

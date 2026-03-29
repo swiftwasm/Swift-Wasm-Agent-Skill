@@ -10,19 +10,38 @@ This repository is compatible with major agent tools, leveraging standardized fo
 
 ## Installation
 
-### Claude Code
+### Agent Skills CLI (Recommended)
+
+Install individual skills directly from this repository:
+
+```bash
+npx skills add https://github.com/swiftwasm/skills --skill javascriptkit
+npx skills add https://github.com/swiftwasm/skills --skill bridge-js
+npx skills add https://github.com/swiftwasm/skills --skill porting
+```
+
+### Claude Code Plugin
 
 1. Add this repository as a plugin marketplace:
    ```bash
    claude plugin marketplace add swiftwasm/skills
    ```
 
-2. Install skills using a loop:
+2. Install skills:
    ```bash
    for skill in javascriptkit bridge-js porting; do
      claude plugin install ${skill}@swiftwasm-skills
    done
    ```
+
+Alternatively, add to your project's `.claude/settings.json`:
+
+```json
+{
+  "enabledPlugins": ["swiftwasm-skills"],
+  "extraKnownMarketplaces": ["swiftwasm/skills"]
+}
+```
 
 ### OpenAI Codex
 
@@ -37,8 +56,7 @@ mkdir -p ~/.codex/skills
 
 # Clone and copy all skills
 git clone https://github.com/swiftwasm/skills.git /tmp/swiftwasm-skills
-for skill_path in /tmp/swiftwasm-skills/skills/*; do
-  [ -d "$skill_path" ] || continue
+for skill_path in /tmp/swiftwasm-skills/javascriptkit /tmp/swiftwasm-skills/bridge-js /tmp/swiftwasm-skills/porting; do
   cp -r "$skill_path" ~/.codex/skills/
 done
 ```
@@ -49,8 +67,7 @@ To use skills only within a specific project:
 ```bash
 # In your project root
 mkdir -p .codex/skills
-for skill_path in /path/to/swiftwasm-skills/skills/*; do
-  [ -d "$skill_path" ] || continue
+for skill_path in /path/to/swiftwasm-skills/javascriptkit /path/to/swiftwasm-skills/bridge-js /path/to/swiftwasm-skills/porting; do
   cp -r "$skill_path" .codex/skills/
 done
 ```
@@ -71,9 +88,9 @@ For Cursor, please refer to [Installing Skills from GitHub](https://cursor.com/d
 
 | Name | Description | Documentation |
 |------|-------------|---------------|
-| `javascriptkit` | Assist with Swift & JavaScript interop, project initialization, and memory management for WebAssembly. | [SKILL.md](skills/javascriptkit/SKILL.md) |
-| `bridge-js` | Assist with BridgeJS for type-safe Swift-to-JavaScript bindings, exporting Swift APIs, and importing TypeScript definitions. | [SKILL.md](skills/bridge-js/SKILL.md) |
-| `porting` | Check Swift on Wasm compatibility, identify incompatible frameworks, port and refactor code for WebAssembly. | [SKILL.md](skills/porting/SKILL.md) |
+| `javascriptkit` | Assist with Swift & JavaScript interop, project initialization, and memory management for WebAssembly. | [SKILL.md](javascriptkit/SKILL.md) |
+| `bridge-js` | Assist with BridgeJS for type-safe Swift-to-JavaScript bindings, exporting Swift APIs, and importing TypeScript definitions. | [SKILL.md](bridge-js/SKILL.md) |
+| `porting` | Check Swift on Wasm compatibility, identify incompatible frameworks, port and refactor code for WebAssembly. | [SKILL.md](porting/SKILL.md) |
 
 ## Usage
 
