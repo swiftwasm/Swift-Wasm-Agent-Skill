@@ -5,7 +5,7 @@
   "author": {
     "name": "SwiftWasm"
   },
-  "repository": "https://github.com/swiftwasm/skills",
+  "repository": "https://github.com/swiftwasm/Swift-Wasm-Agent-Skill",
   "license": "MIT",
   "keywords": [
     "swift",
