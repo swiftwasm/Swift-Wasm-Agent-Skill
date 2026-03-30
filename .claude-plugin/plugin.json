@@ -1,0 +1,24 @@
+{
+  "name": "swiftwasm-skills",
+  "version": "0.0.1",
+  "description": "Agent Skills for SwiftWasm ecosystem - JavaScriptKit, BridgeJS, and Wasm porting guidance.",
+  "author": {
+    "name": "SwiftWasm"
+  },
+  "repository": "https://github.com/swiftwasm/Swift-Wasm-Agent-Skill",
+  "license": "MIT",
+  "keywords": [
+    "swift",
+    "webassembly",
+    "wasm",
+    "swiftwasm",
+    "javascriptkit",
+    "bridgejs",
+    "porting"
+  ],
+  "skills": [
+    "./javascriptkit",
+    "./bridge-js",
+    "./porting"
+  ]
+}
