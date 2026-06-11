@@ -49,6 +49,16 @@ Bind a global or any value you provide at init:
 - **Inject**: Omit `from: .global` and pass the value in `getImports()`.
 - **Global**: Use `from: .global`; runtime reads from `globalThis`; do not pass in `getImports()`.
 
+## Supported parameter/return types for imports
+
+Beyond primitives, `String`, and `JSObject`/`JSValue`, imported function signatures also accept:
+
+- **Optional `@JSClass`** types (`Foo?`) as parameters and returns.
+- **Optional `@JS struct`** types in imported signatures.
+- **Case enums** as imported parameters and return values.
+- **Associated-value enums** in the import path.
+- **Async callbacks**: a closure parameter typed `(A) async throws(JSException) -> R` lets Swift `await` a JS-supplied async function (rejection surfaces as `JSException`). This is for *callbacks*, not standalone `@JSFunction` (which can't be async).
+
 ## Summary
 
 | Macro | Use for | From global | From getImports() |

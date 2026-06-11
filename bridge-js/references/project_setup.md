@@ -254,7 +254,13 @@ MyApp/
     └── MyAppTests/                 # Swift tests
 ```
 
+## Multiple targets in one package
+
+A single package can have several targets using `@JS`. Apply the BridgeJS plugin to **every** target containing `@JS` declarations. To make one target's `@JS` types visible to other targets in the same package, also add a `bridge-js.config.json` (even just `{}`) to that target's source directory. See JavaScriptKit's `Examples/MultiModule/`. (Types from a *separate Swift package* still cannot be referenced from `@JS` declarations.)
+
 ## Configuration Files
+
+BridgeJS loads and merges, in order: `bridge-js.config.json` (base, commit to git) then `bridge-js.config.local.json` (local overrides, gitignore). Later files win. The presence of a config file — even empty `{}` — is what exposes a target's `@JS` types to other modules in the package.
 
 ### bridge-js.config.json
 
@@ -263,11 +269,16 @@ Place in your target directory:
 ```json
 {
   "exposeToGlobal": false,
+  "identityMode": "pointer",
   "tools": {
     "node": "/usr/local/bin/node"
   }
 }
 ```
+
+- **`exposeToGlobal`** (default `false`): when `true`, exported APIs are reachable via `globalThis` in addition to the `exports` object returned by `init`/`createExports`. `false` gives better module isolation and multi-instance support.
+- **`identityMode`** (default off): by default each crossing makes a new JS wrapper, so `a === b` is `false` for the same Swift object. Set to `"pointer"` to make every exported class use pointer-based identity caching so the same Swift heap pointer always returns the same JS wrapper (`===` works across crossings). Override per class with `@JS(identityMode: true/false)`. Helps reuse-heavy workloads; adds overhead for create-heavy ones.
+- **`tools.node`**: explicit Node.js path (useful in Xcode where PATH isn't inherited). Resolution order: config files → `JAVASCRIPTKIT_NODE_EXEC` env var → system PATH.
 
 ### bridge-js.config.local.json
 
