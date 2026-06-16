@@ -84,8 +84,22 @@ describe("MyApp", async () => {
         expect(point.x).toBe(1.0);
         expect(point.y).toBe(2.0);
     });
+
+    test("closures round-trip and are released", () => {
+        const processor = new exports.TextProcessor((s) => s.toUpperCase());
+        expect(processor.getTransform()("hello")).toBe("HELLO");
+        processor.release();
+    });
+
+    test("async exports return Promises", async () => {
+        await expect(exports.fetchCount("/items")).resolves.toBe(6);
+    });
 });
 ```
+
+> Async exports/closures require `JavaScriptEventLoop.installGlobalExecutor()` to be called once during startup in the Swift module before any `async` API is invoked.
+
+> A returned `JSTypedClosure` (or the wrapper holding it) must have `release()` called once on the JS side when no longer needed; plain closure types are released automatically.
 
 ## Running Tests
 

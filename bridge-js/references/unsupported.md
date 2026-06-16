@@ -6,7 +6,7 @@ For the full list and examples, see DocC in the checked-out JavaScriptKit repo: 
 
 ## Cross-module types (exporting)
 
-You **cannot** use a type defined in one Swift target in an **exported** API of another target. For example, if module `Lib` defines `@JS struct LibPoint`, module `App` (which depends on `Lib`) must not export a function that takes or returns `LibPoint`. BridgeJS generates glue per target and does not bridge types across module boundaries.
+You **cannot** use a non-`@JS` type from another target, or any type from a **separate Swift package**, in an **exported** API. Within the **same package**, a target's `@JS` types *can* be shared with other targets if the defining target has a `bridge-js.config.json` (even empty `{}`); see [project_setup.md](project_setup.md). BridgeJS otherwise generates glue per target and does not bridge types across package boundaries.
 
 ## Errors
 
@@ -14,7 +14,7 @@ You **cannot** use a type defined in one Swift target in an **exported** API of 
 
 ## Imported bindings
 
-- **Async**: Imported JavaScript functions are not exposed as async in Swift; no first-class Promise/async support for the macro-generated import path.
+- **Async**: Imported standalone `@JSFunction` cannot be `async` (no first-class Promise/async for the macro-generated import path). Async JS *callbacks* (closure parameters) are supported.
 - **Generics**: No generic type parameters on bridged function signatures.
 
 ## Per-type limits

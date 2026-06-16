@@ -13,15 +13,17 @@ When you need details, read DocC from the **checked-out JavaScriptKit repository
 
 ## Two directions
 
-- **Export Swift**: Use `@JS` (and `@JS(namespace:enumStyle:)`) on functions, classes, structs, enums, closures, protocols, etc. JavaScript then calls into your Swift code. See [references/exporting.md](references/exporting.md).
+- **Export Swift**: Use `@JS` (and `@JS(namespace:enumStyle:identityMode:)`) on functions, classes, structs, enums, closures, protocols, etc. JavaScript then calls into your Swift code. See [references/exporting.md](references/exporting.md).
 - **Import JavaScript**: (1) Declare bindings in Swift with `@JSFunction`, `@JSClass`, `@JSGetter`, `@JSSetter`; use `@JSGetter(from: .global)` for globals like `document`/`console`; inject other implementations via `getImports()`. See [references/importing.md](references/importing.md). (2) Or use `bridge-js.d.ts` to generate the same Swift bindings. See [references/importing-ts.md](references/importing-ts.md).
 
 ## Key concepts
 
-- **Type mapping**: Primitives, `Optional` ↔ `null`, `JSUndefinedOr` ↔ `undefined`, arrays, `Record<string, V>` ↔ `[String: V]`, unbridged → `JSObject`/`JSValue`. See [references/types.md](references/types.md) if present.
+- **Type mapping**: Primitives, `Optional` ↔ `null`, `JSUndefinedOr` ↔ `undefined`, arrays, `Record<string, V>` ↔ `[String: V]`, `JSTypedArray<T>` ↔ TypedArray (by reference), unbridged → `JSObject`/`JSValue`. See [references/types.md](references/types.md) if present.
+- **Semantics**: classes, protocols, `JSTypedArray`, and closures cross by reference; structs, enums, and plain arrays cross by copy.
 - **Errors**: Only `throws(JSException)` is supported at the bridge; plain `throws` is not.
+- **Async**: Exported `async` functions/methods/closures become `Promise`-returning JS functions (require `JavaScriptEventLoop.installGlobalExecutor()`). Imported standalone `@JSFunction` cannot be async, but imported async **callbacks** (closure parameters) are supported.
 - **Preview interfaces**: For **previewing d.ts → Swift** locally, run the ts2swift script from the checked-out JavaScriptKit: from a project that depends on JavaScriptKit use `node .build/checkouts/JavaScriptKit/Plugins/BridgeJS/Sources/TS2Swift/JavaScript/bin/ts2swift.js <input.d.ts> [options]`; Run with `--help` for usage.
-- **Closures**: Do not use plain Swift closure types for bridging Swift closures to JavaScript. Use **JSTypedClosure** when passing or returning Swift closures to JS, and call `release()` when the closure is no longer needed by JS. When receiving callbacks from JS (e.g. imported APIs), use regular closure types in Swift (`(Args) -> Return`).
+- **Closures**: Use **JSTypedClosure** when passing or returning Swift closures to JS, and call `release()` when the closure is no longer needed by JS. Plain Swift closure types also work as parameters/returns, released automatically via `FinalizationRegistry`. Closure signatures may be `throws(JSException)` and/or `async`. When receiving callbacks from JS (e.g. imported APIs), use regular closure types in Swift (`(Args) -> Return`).
 
 ## References
 
