@@ -2,6 +2,8 @@
 
 Expose Swift to JavaScript using the `@JS` (and `@JS(namespace:enumStyle:identityMode:)`) macro. For full detail, see DocC in the checked-out JavaScriptKit repo: `Sources/JavaScriptKit/Documentation.docc/Articles/BridgeJS/Exporting-Swift-to-JavaScript.md` and the Exporting-Swift-* topics.
 
+> JS/TS consumes exported `@JS` types through the **generated** TypeScript declarations (`index.d.ts`), which are the source of truth — never hand-author or mirror them. Note that `swift package plugin bridge-js` does **not** refresh `index.d.ts`; only the full `swift package … js` build does. See [Updating Generated Code](project_setup.md#updating-generated-code-aot).
+
 ---
 
 ## Functions
