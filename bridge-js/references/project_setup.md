@@ -317,6 +317,10 @@ git add Sources/MyApp/Generated
 git commit -m "Update generated BridgeJS code"
 ```
 
+> **`swift package plugin bridge-js` does not refresh the consumer `index.d.ts`.** It only regenerates the committed `Generated/` skeleton (`BridgeJS.swift` + `JavaScript/BridgeJS.json`). The TypeScript declarations that JS/TS consumers import (`.build/plugins/PackageToJS/outputs/Package/index.d.ts`, or a project wrapper around it) are emitted only by the full build, `swift package --swift-sdk $SWIFT_SDK_ID js`. After adding or changing `@JS` exports, run the full `js` build to refresh `index.d.ts`.
+>
+> **The generated `index.d.ts` is the single source of truth for the exported `@JS` surface — never hand-author or augment it** (for example a `declare module` mirror) to make TypeScript type-check. A hand-written copy silently drifts from the Swift `@JS` declarations. If TS does not see your new exports, regenerate with the full `js` build; do not write the types by hand.
+
 ## Troubleshooting
 
 ### "Extern" Feature Error
