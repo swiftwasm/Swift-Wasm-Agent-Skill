@@ -38,7 +38,11 @@ Alternatively, add to your project's `.claude/settings.json`:
 
 ```json
 {
-  "enabledPlugins": ["swiftwasm-skills"],
+  "enabledPlugins": [
+    "javascriptkit@swiftwasm-skills",
+    "bridge-js@swiftwasm-skills",
+    "porting@swiftwasm-skills"
+  ],
   "extraKnownMarketplaces": ["swiftwasm/skills"]
 }
 ```
